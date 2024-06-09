@@ -5,9 +5,9 @@ import pandas as pd
 
 # Function to get data from ESP32
 def get_data():
-    esp32_ip = "127.0.0.1"  # Replace with your ESP32 IP address
+    ngrok_url = "https://0895-2804-1b2-f143-5f06-cd6b-f4c5-5a0b-c40.ngrok-free.app"  # Substitua pelo URL fornecido pelo ngrok
     try:
-        response = requests.get(f"http://{esp32_ip}/data")
+        response = requests.get(f"{ngrok_url}/data")
         if response.status_code == 200:
             data = response.json()
             return data
@@ -19,9 +19,9 @@ def get_data():
 
 # Function to send command to ESP32
 def send_command(command, value=None):
-    esp32_ip = "192.168.15.155"  # Replace with your ESP32 IP address
+    ngrok_url = "https://0895-2804-1b2-f143-5f06-cd6b-f4c5-5a0b-c40.ngrok-free.app"  # Substitua pelo URL fornecido pelo ngrok
     try:
-        url = f"http://{esp32_ip}/command"
+        url = f"{ngrok_url}/command"
         payload = {"command": command}
         if value is not None:
             payload["value"] = value
@@ -34,7 +34,7 @@ def send_command(command, value=None):
         st.error(f"Error: {e}")
 
 # Page configuration
-image_path = "Projeto/images.jpg"
+image_path = "images/cat_icon.png"  # Use a relative path for the image
 st.set_page_config(page_title="roboblackcat", page_icon=image_path, layout="wide")
 
 st.markdown(
@@ -102,6 +102,16 @@ st.markdown(
         background-color: #fff;
     }
     </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    f"""
+    <div class="header-img">
+        <img src="{image_path}">
+    </div>
+    <div class="title">roboblackcat</div>
     """,
     unsafe_allow_html=True
 )
