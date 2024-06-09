@@ -3,9 +3,11 @@ import requests
 import time
 import pandas as pd
 
-# Function to get data from ESP32
+# URL fornecida pelo ngrok
+ngrok_url = "https://b805-2804-1b2-f143-5f06-cd6b-f4c5-5a0b-c40.ngrok-free.app"  # Substitua pelo URL fornecido pelo ngrok
+
+# Função para obter dados do ESP32
 def get_data():
-    ngrok_url = "https://0895-2804-1b2-f143-5f06-cd6b-f4c5-5a0b-c40.ngrok-free.app"  # Substitua pelo URL fornecido pelo ngrok
     try:
         response = requests.get(f"{ngrok_url}/data")
         if response.status_code == 200:
@@ -16,10 +18,10 @@ def get_data():
             return None
     except requests.exceptions.RequestException as e:
         st.error(f"Error: {e}")
+        return None
 
-# Function to send command to ESP32
+# Função para enviar comandos para o ESP32
 def send_command(command, value=None):
-    ngrok_url = "https://0895-2804-1b2-f143-5f06-cd6b-f4c5-5a0b-c40.ngrok-free.app"  # Substitua pelo URL fornecido pelo ngrok
     try:
         url = f"{ngrok_url}/command"
         payload = {"command": command}
@@ -33,8 +35,8 @@ def send_command(command, value=None):
     except requests.exceptions.RequestException as e:
         st.error(f"Error: {e}")
 
-# Page configuration
-image_path = "images/cat_icon.png"  # Use a relative path for the image
+# Configuração da página
+image_path = "Projeto/images.jpg"  # Use a relative path for the image
 st.set_page_config(page_title="roboblackcat", page_icon=image_path, layout="wide")
 
 st.markdown(
@@ -118,7 +120,7 @@ st.markdown(
 
 st.markdown("### ESP32 Data Control and Monitoring Panel")
 
-# Control buttons
+# Botões de controle
 st.markdown(
     """
     <div class="control-buttons">
@@ -156,10 +158,10 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Initiating line charts for continuous monitoring
+# Gráficos de linha para monitoramento contínuo
 placeholder = st.empty()
 
-# Lists to store historical data
+# Listas para armazenar dados históricos
 timestamps = []
 temperatures = []
 ref_temperatures = []
@@ -167,11 +169,11 @@ powers = []
 voltages = []
 currents = []
 
-# Continuous update loop
+# Loop de atualização contínua
 while True:
     data = get_data()
     if data:
-        # Updating data
+        # Atualizando dados
         current_time = time.strftime('%H:%M:%S')
         timestamps.append(current_time)
         temperatures.append(data.get("temperature", 0))
@@ -180,7 +182,7 @@ while True:
         voltages.append(data.get("voltage", 0))
         currents.append(data.get("current", 0))
 
-        # Creating DataFrame
+        # Criando DataFrame
         df = pd.DataFrame({
             'Time': timestamps,
             'Temperature': temperatures,
@@ -190,11 +192,11 @@ while True:
             'Current': currents
         })
 
-        # Displaying real-time data
+        # Exibindo dados em tempo real
         with placeholder.container():
             st.markdown("### ESP32 Data")
 
-            # Display metrics
+            # Exibir métricas
             st.markdown(
                 """
                 <div class="metrics">
@@ -218,7 +220,7 @@ while True:
             st.line_chart(df[['Time', 'Temperature', 'Reference Temperature', 'Power']].set_index('Time'), height=500)
             st.markdown("</div>", unsafe_allow_html=True)
 
-        # Wait 1 second before updating again
+        # Esperar 1 segundo antes de atualizar novamente
         time.sleep(1)
     else:
         time.sleep(5)
