@@ -34,7 +34,7 @@ def send_command(command, value=None):
         st.error(f"Error: {e}")
 
 # Page configuration
-image_path = "/Projeto/images.jpg"
+image_path = "Projeto/images.jpg"
 st.set_page_config(page_title="roboblackcat", page_icon=image_path, layout="wide")
 
 st.markdown(
