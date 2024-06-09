@@ -5,7 +5,7 @@ import pandas as pd
 
 # Function to get data from ESP32
 def get_data():
-    esp32_ip = "192.168.15.155"  # Replace with your ESP32 IP address
+    esp32_ip = "127.0.0.1"  # Replace with your ESP32 IP address
     try:
         response = requests.get(f"http://{esp32_ip}/data")
         if response.status_code == 200:
